@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Special+Elite&display=swap');
 
 :root {
     --primary-text: #c7b299;
@@ -22,9 +22,13 @@ body {
     filter: sepia(0.3) contrast(1.4) brightness(0.8);
 }
 
+/* --- CORREÇÃO IMPORTANTE AQUI --- */
 #game-board .card {
     perspective: 1000px;
     cursor: pointer;
+    width: 140px;     /* Largura da carta */
+    height: 200px;    /* Altura da carta */
+    position: relative;
 }
 
 .card-inner {
@@ -54,13 +58,13 @@ body {
 .card-back {
     background-color: var(--card-bg);
     border: 2px solid var(--border-color);
-    background-image: url('img/halo_of_sun.jpg'); 
+    background-image: url('img/halo_of_sun.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     transform: rotateY(0deg);
 }
-
+        
 .card-back:hover {
     filter: brightness(1.3);
 }
@@ -113,25 +117,24 @@ body {
 
 #sanity-bar-container {
     width: 100%;
-    height: 14px; /* Aumentei um pouco a altura para melhor visualização */
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo da barra "vazia" */
+    height: 14px;
+    background-color: rgba(0, 0, 0, 0.5);
     border: 1px solid #111;
     border-radius: 7px;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.7);
+    padding: 2px;
 }
 
 #sanity-bar-fill {
     height: 100%;
-    width: 100%; /* Começa em 100% */
-    background-color: #0a0; /* Começa verde */
+    width: 100%;
+    background-color: #00a600;
     border-radius: 6px;
-    /* Transição suave para a largura E para a cor */
     transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
 }
 
 #victory-screen {
     z-index: 100;
-
 }
 
 .letter {
