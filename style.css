@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Special+Elite&display=swap');
 
 :root {
     --primary-text: #c7b299;
@@ -25,6 +25,9 @@ body {
 #game-board .card {
     perspective: 1000px;
     cursor: pointer;
+    width: 140px;     /* Largura da carta */
+    height: 200px;    /* Altura da carta */
+    position: relative;
 }
 
 .card-inner {
@@ -54,7 +57,7 @@ body {
 .card-back {
     background-color: var(--card-bg);
     border: 2px solid var(--border-color);
-    background-image: url('img/halo_of_sun.jpg'); 
+    background-image: url('img/halo_of_sun.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -118,33 +121,38 @@ body {
     border: 1px solid #111;
     border-radius: 7px;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.7);
+    padding: 2px;
 }
 
 #sanity-bar-fill {
     height: 100%;
     width: 100%;
-    background-color: #0a0;
+    background-color: #00a600;
     border-radius: 6px;
     transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
 }
 
 #victory-screen {
     z-index: 100;
-
 }
 
 .letter {
+    /* Tornamos o fundo do container do texto transparente */
     background-color: transparent; 
-    box-shadow: none;
-    border: none;
-    position: relative;
+    box-shadow: none; /* Removemos a sombra da caixa */
+    border: none; /* Removemos a borda */
+    position: relative; /* Essencial para o posicionamento do pseudo-elemento */
+
+    /* Mantemos os estilos do texto */
     font-family: 'Caveat', cursive;
     color: #e0f7fa;
     text-shadow: 
-        0 0 5px rgb(4, 0, 255),
-        0 0 10px rgb(0, 4, 255),
-        0 0 20px rgb(38, 0, 255),
-        0 0 35px rgb(66, 0, 219);
+        0 0 5px rgb(0, 12, 187),
+        0 0 10px rgba(173, 216, 230, 0.7),
+        0 0 20px rgb(76, 0, 255),
+        0 0 35px rgb(0, 17, 255);
+
+    /* Ajustes de layout e animação */
     padding: 2rem;
     max-width: 600px;
     line-height: 2.2;
@@ -153,6 +161,7 @@ body {
     transition: transform 1s;
 }
 
+/* NOVO: Pseudo-elemento para ser o fundo de papel */
 .letter::before {
     content: '';
     position: absolute;
@@ -160,13 +169,46 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1; 
+    z-index: -1; /* Coloca o fundo atrás do texto */
+
+    /* A imagem de papel com o filtro escuro vai aqui */
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
         url('img/carta_de_mary.png');
+
     background-size: cover;
     background-position: center;
     border-radius: 4px;
+
+    /* Efeito de desfoque nas bordas para suavizar a "caixa" */
     filter: blur(3px); 
-    transform: scale(1.05);
+
+    /* Garante que o fundo tenha a mesma animação da carta */
+    transform: scale(1.05); /* Um pouco maior para o blur não cortar as bordas */
 }
+
+#dog-video-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 0; /* Fica atrás de todo o conteúdo */
+    object-fit: cover; /* Garante que o vídeo cubra toda a tela sem distorcer */
+}
+
+/*#game-over-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 0;  /////Fica atrás do botão
+    object-fit: cover;
+} */
