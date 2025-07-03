@@ -309,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
         game.isGameOver = true;
         clearInterval(game.timerInterval);
         stopAllMedia();
-        playSound(sounds.siren, 0.8);
         setTimeout(() => {
             alert(message);
             showStartMenu();
