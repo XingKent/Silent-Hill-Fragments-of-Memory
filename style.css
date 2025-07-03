@@ -63,7 +63,7 @@ body {
     background-position: center;
     transform: rotateY(0deg);
 }
-
+        
 .card-back:hover {
     filter: brightness(1.3);
 }
@@ -142,7 +142,7 @@ body {
     box-shadow: none; /* Removemos a sombra da caixa */
     border: none; /* Removemos a borda */
     position: relative; /* Essencial para o posicionamento do pseudo-elemento */
-
+    
     /* Mantemos os estilos do texto */
     font-family: 'Caveat', cursive;
     color: #e0f7fa;
@@ -175,14 +175,14 @@ body {
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
         url('img/carta_de_mary.png');
-
+    
     background-size: cover;
     background-position: center;
     border-radius: 4px;
 
     /* Efeito de desfoque nas bordas para suavizar a "caixa" */
     filter: blur(3px); 
-
+    
     /* Garante que o fundo tenha a mesma animação da carta */
     transform: scale(1.05); /* Um pouco maior para o blur não cortar as bordas */
 }
