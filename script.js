@@ -1,4 +1,3 @@
-// Constantes e Variáveis Globais
 const CARD_DATA = [
     { name: 'James', img: 'img/james.jpg', type: 'human' },
     { name: 'Mary', img: 'img/mary.jpg', type: 'human' },
@@ -12,7 +11,6 @@ const CARD_DATA = [
 
 let game;
 
-// Elementos do DOM
 const elements = {
     board: document.getElementById('game-board'),
     stepCounter: document.getElementById('step-counter'),
@@ -33,7 +31,6 @@ const sounds = {
     victory: document.getElementById('victory-sound')
 };
 
-// Construtor do Estado do Jogo
 function GameState() {
     this.cards = [];
     this.flippedCards = [];
@@ -46,7 +43,6 @@ function GameState() {
     this.timerInterval = null;
 }
 
-// Funções do Jogo
 function createCardElement(cardData) {
     const cardEl = document.createElement('div');
     cardEl.className = 'card';
@@ -113,22 +109,18 @@ function handleMismatch() {
 }
 
 function updateSanity(change) {
-    // 1. Calcula o novo valor da sanidade
     game.sanity = Math.max(0, game.sanity + change);
 
-    // 2. Atualiza a LARGURA da barra de preenchimento
     elements.sanityBar.style.width = `${game.sanity}%`;
 
-    // 3. Atualiza a COR da barra com base na porcentagem
     if (game.sanity > 60) {
-        elements.sanityBar.style.backgroundColor = '#00a600'; // Verde
+        elements.sanityBar.style.backgroundColor = '#00a600';
     } else if (game.sanity > 30) {
-        elements.sanityBar.style.backgroundColor = '#d49d00'; // Amarelo/Âmbar
+        elements.sanityBar.style.backgroundColor = '#d49d00';
     } else {
-        elements.sanityBar.style.backgroundColor = '#a00000'; // Vermelho
+        elements.sanityBar.style.backgroundColor = '#a00000';
     }
 
-    // 4. Lógica para entrar no "Otherworld" e "Game Over"
     if (game.sanity <= 50 && !elements.body.classList.contains('otherworld')) {
         enterOtherworld();
     }
@@ -202,13 +194,11 @@ function init() {
     elements.board.innerHTML = '';
     elements.body.classList.remove('otherworld');
     
-    // Para e reseta todos os sons
     Object.values(sounds).forEach(sound => {
         sound.pause();
         sound.currentTime = 0;
     });
     
-    // Duplica as cartas e embaralha
     const gameCardsData = [...CARD_DATA, ...CARD_DATA]
         .sort(() => 0.5 - Math.random());
     
@@ -217,20 +207,16 @@ function init() {
         elements.board.appendChild(cardEl);
     });
     
-    // Reseta a interface do usuário
     elements.stepCounter.textContent = '0';
     elements.timeCounter.textContent = '00:00';
-    updateSanity(100 - game.sanity); // Reseta a sanidade para 100
+    updateSanity(100 - game.sanity);
     
-    // Inicia o timer e o som ambiente
     if (game.timerInterval) clearInterval(game.timerInterval);
     game.timerInterval = setInterval(() => updateStats('time'), 1000);
     playSound(sounds.static, 0.05);
 }
 
-// Event Listeners para os botões
 elements.restartBtn.addEventListener('click', init);
 elements.playAgainBtn.addEventListener('click', init);
 
-// Inicia o jogo assim que a página carrega
 init(); 

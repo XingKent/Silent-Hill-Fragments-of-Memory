@@ -113,8 +113,8 @@ body {
 
 #sanity-bar-container {
     width: 100%;
-    height: 14px; /* Aumentei um pouco a altura para melhor visualização */
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo da barra "vazia" */
+    height: 14px;
+    background-color: rgba(0, 0, 0, 0.5);
     border: 1px solid #111;
     border-radius: 7px;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.7);
@@ -122,10 +122,9 @@ body {
 
 #sanity-bar-fill {
     height: 100%;
-    width: 100%; /* Começa em 100% */
-    background-color: #0a0; /* Começa verde */
+    width: 100%;
+    background-color: #0a0;
     border-radius: 6px;
-    /* Transição suave para a largura E para a cor */
     transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
 }
 
@@ -135,13 +134,10 @@ body {
 }
 
 .letter {
-    /* Tornamos o fundo do container do texto transparente */
     background-color: transparent; 
-    box-shadow: none; /* Removemos a sombra da caixa */
-    border: none; /* Removemos a borda */
-    position: relative; /* Essencial para o posicionamento do pseudo-elemento */
-    
-    /* Mantemos os estilos do texto */
+    box-shadow: none;
+    border: none;
+    position: relative;
     font-family: 'Caveat', cursive;
     color: #e0f7fa;
     text-shadow: 
@@ -149,8 +145,6 @@ body {
         0 0 10px rgba(173, 216, 230, 0.7),
         0 0 20px rgba(0, 191, 255, 0.5),
         0 0 35px rgba(0, 119, 190, 0.4);
-
-    /* Ajustes de layout e animação */
     padding: 2rem;
     max-width: 600px;
     line-height: 2.2;
@@ -159,7 +153,6 @@ body {
     transition: transform 1s;
 }
 
-/* NOVO: Pseudo-elemento para ser o fundo de papel */
 .letter::before {
     content: '';
     position: absolute;
@@ -167,20 +160,13 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1; /* Coloca o fundo atrás do texto */
-
-    /* A imagem de papel com o filtro escuro vai aqui */
+    z-index: -1; 
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
         url('img/carta_de_mary.png');
-    
     background-size: cover;
     background-position: center;
     border-radius: 4px;
-
-    /* Efeito de desfoque nas bordas para suavizar a "caixa" */
     filter: blur(3px); 
-    
-    /* Garante que o fundo tenha a mesma animação da carta */
-    transform: scale(1.05); /* Um pouco maior para o blur não cortar as bordas */
+    transform: scale(1.05);
 }
