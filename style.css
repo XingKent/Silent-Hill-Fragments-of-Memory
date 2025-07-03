@@ -187,3 +187,16 @@ body {
     /* Garante que o fundo tenha a mesma animação da carta */
     transform: scale(1.05); /* Um pouco maior para o blur não cortar as bordas */
 }
+
+#dog-video-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 0; /* Fica atrás de todo o conteúdo */
+    object-fit: cover; /* Garante que o vídeo cubra toda a tela sem distorcer */
+}

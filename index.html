@@ -60,7 +60,7 @@
         </div>
         
         <div class="mt-8 text-center text-gray-500 italic">
-            <p>Listen to your radio... it warns you of danger...</p>
+            <p>Listen to your <span id="radio-trigger" class="radio-link">radio</span>... it warns you of danger...</p>
         </div>
     </div>
     
@@ -84,6 +84,19 @@
     <audio id="flip-sound" src="https://vgmsite.com/soundtracks/silent-hill-2-sound-effects/qckqxwso/Item%20Select.mp3"></audio>
     <audio id="match-sound" src="https://vgmsite.com/soundtracks/silent-hill-2-sound-effects/hyswdgdu/Save%20Sound.mp3"></audio>
     <audio id="victory-sound" src="audio/receber_item.mp3"></audio>
+
+    <div id="dog-ending-screen" class="fixed inset-0 bg-black justify-center items-center z-50 hidden">
+        <video loop playsinline id="dog-video-bg">
+            <source src="audio/doguinho.mp4" type="video/mp4">
+            Seu navegador não suporta vídeos.
+        </video>
+        
+        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center">
+            <div class="flex-grow"></div> <button id="dog-ending-close-btn" class="mb-8 bg-gray-800 bg-opacity-70 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+                <i class="fas fa-times mr-2"></i>Close
+            </button>
+        </div>
+    </div>
     
     <script src="script.js" defer></script>
 </body>

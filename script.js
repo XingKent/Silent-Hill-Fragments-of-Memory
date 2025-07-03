@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'James', img: 'img/james.jpg', type: 'human' },
         { name: 'Mary', img: 'img/mary.jpg', type: 'human' },
         { name: 'Nurse', img: 'img/nurse.jpg', type: 'monster' },
-        { name: 'Lying Figure', img: 'https://i.imgur.com/O6t9JgU.png', type: 'monster' },
-        { name: 'Radio', img: 'https://i.imgur.com/7Yf8KxR.png', type: 'item' },
-        { name: 'Flashlight', img: 'https://i.imgur.com/uAdH8dF.png', type: 'item' },
-        { name: 'Robbie', img: 'https://i.imgur.com/fVzXk9M.png', type: 'other' },
-        { name: 'Halo', img: 'https://i.imgur.com/k6xVz7k.png', type: 'item' },
-        { name: 'Pyramid Head', img: 'https://i.imgur.com/tHqg5bJ.png', type: 'boss' },
-        { name: 'Maria', img: 'img/pyramid_head.jpg', type: 'human' }
+        { name: 'Lying Figure', img: 'img/lyingf1.png', type: 'monster' },
+        { name: 'Radio', img: 'img/radio.webp', type: 'item' },
+        { name: 'Flashlight', img: 'img/flashlight.webp', type: 'item' },
+        { name: 'Robbie', img: 'img/robbie.jpg', type: 'other' },
+        { name: 'Abstract Daddy', img: 'img/abstdad.jpg', type: 'boss' },
+        { name: 'Pyramid Head', img: 'img/pyramid_head.jpg', type: 'boss' },
+        { name: 'Maria', img: 'img/maria.jpg', type: 'human' }
     ];
 
     // --- CONFIGURAÇÕES DE DIFICULDADE ---
@@ -32,7 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
         startMenu: document.getElementById('start-menu'),
         gameContainer: document.getElementById('game-container'),
         difficultyButtons: document.querySelectorAll('.difficulty-btn'),
-        body: document.body
+        body: document.body,
+        radioTrigger: document.getElementById('radio-trigger'),
+        dogEndingScreen: document.getElementById('dog-ending-screen'),
+        dogEndingCloseBtn: document.getElementById('dog-ending-close-btn'),
+        dogVideo: document.getElementById('dog-video-bg') // Adicionado para controle fácil
     };
 
     // --- ELEMENTOS DE ÁUDIO ---
@@ -42,12 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
         monster: document.getElementById('monster-sound'),
         flip: document.getElementById('flip-sound'),
         match: document.getElementById('match-sound'),
-        victory: document.getElementById('victory-sound')
+        victory: document.getElementById('victory-sound'),
+        dog: document.getElementById('dog-sound')
     };
     
     // --- ESTADO DO JOGO ---
     let game;
     let userHasInteracted = false;
+
+    // --- FUNÇÕES ---
 
     function GameState(difficulty) {
         const settings = difficultySettings[difficulty];
@@ -65,8 +72,93 @@ document.addEventListener('DOMContentLoaded', () => {
         this.timerInterval = null;
     }
 
-    // --- FUNÇÕES ---
+    // NOVA FUNÇÃO para parar todas as mídias
+    function stopAllMedia() {
+        Object.values(sounds).forEach(sound => {
+            if (sound) {
+                sound.pause();
+                sound.currentTime = 0;
+            }
+        });
+        if (elements.dogVideo) {
+            elements.dogVideo.pause();
+            elements.dogVideo.currentTime = 0;
+        }
+    }
 
+    function playSound(sound, volume = 1.0) {
+        if (!sound) return;
+        sound.volume = volume;
+        sound.currentTime = 0;
+        sound.play().catch(error => {});
+    }
+    
+    // Função MODIFICADA para iniciar o jogo
+    function initGame(difficulty) {
+        stopAllMedia(); // Garante que tudo para antes de começar
+
+        if (!userHasInteracted) {
+            userHasInteracted = true;
+            // Toca o som de estática pela primeira vez
+            playSound(sounds.static, 0.05);
+        } else {
+             playSound(sounds.static, 0.05);
+        }
+
+        game = new GameState(difficulty);
+        
+        elements.startMenu.classList.add('hidden');
+        elements.victoryScreen.classList.add('hidden');
+        elements.dogEndingScreen.classList.add('hidden');
+        elements.gameContainer.classList.remove('hidden');
+        elements.gameContainer.classList.add('flex');
+        elements.body.classList.remove('otherworld');
+        
+        createCards();
+        
+        elements.stepCounter.textContent = '0';
+        elements.timeCounter.textContent = '00:00';
+        updateSanity(0); // Apenas reseta a barra visualmente
+        
+        if (game.timerInterval) clearInterval(game.timerInterval);
+        game.timerInterval = setInterval(() => updateStats('time'), 1000);
+    }
+
+    // Função MODIFICADA para mostrar o menu inicial
+    function showStartMenu() {
+        if (game && game.timerInterval) {
+            clearInterval(game.timerInterval);
+        }
+        
+        stopAllMedia(); // Para tudo
+
+        elements.gameContainer.classList.add('hidden');
+        elements.gameContainer.classList.remove('flex');
+        elements.victoryScreen.classList.add('hidden');
+        elements.victoryScreen.classList.remove('flex');
+        elements.dogEndingScreen.classList.add('hidden');
+        elements.dogEndingScreen.classList.remove('flex');
+        elements.startMenu.classList.remove('hidden');
+        elements.body.classList.remove('otherworld');
+    }
+
+    // Função MODIFICADA para ativar o easter egg
+    function triggerDogEnding() {
+        if (!game || game.isGameOver) return;
+        
+        game.isGameOver = true;
+        clearInterval(game.timerInterval);
+        stopAllMedia(); // Para os sons do jogo
+
+        // Mostra a tela do easter egg e toca o vídeo e o som manualmente
+        elements.gameContainer.classList.add('hidden');
+        elements.dogEndingScreen.classList.remove('hidden');
+        elements.dogEndingScreen.classList.add('flex');
+        
+        if (elements.dogVideo) elements.dogVideo.play();
+        playSound(sounds.dog, 0.6);
+    }
+    
     function createCards() {
         const cardPool = ALL_CARDS.slice(0, game.pairsToMatch);
         const gameCardsData = [...cardPool, ...cardPool].sort(() => 0.5 - Math.random());
@@ -86,20 +178,17 @@ document.addEventListener('DOMContentLoaded', () => {
         cardEl.className = 'card';
         cardEl.dataset.name = cardData.name;
         cardEl.dataset.type = cardData.type;
-    
         cardEl.innerHTML = `
             <div class="card-inner">
                 <div class="card-face card-back"></div>
                 <div class="card-face card-front" style="background-image: url('${cardData.img}')"></div>
             </div>`;
-        
         cardEl.addEventListener('click', () => handleCardClick(cardEl, cardData));
         cardEl.addEventListener('mouseenter', () => handleCardHover(cardData.type));
         return cardEl;
     }
     
     function handleCardClick(cardEl, cardData) {
-        if (!userHasInteracted) initAudio();
         if (game.isLocked || cardEl.classList.contains('flipped') || cardEl.classList.contains('matched') || game.isGameOver) return;
         
         playSound(sounds.flip);
@@ -147,7 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateSanity(change) {
-        game.sanity = Math.max(0, game.sanity + change);
+        game.sanity += change;
+        if (game.sanity > 100) game.sanity = 100;
+        if (game.sanity < 0) game.sanity = 0;
+    
         elements.sanityBar.style.width = `${game.sanity}%`;
     
         if (game.sanity > 60) {
@@ -161,25 +253,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (game.sanity <= 50 && !elements.body.classList.contains('otherworld')) {
             enterOtherworld();
         }
-        if (game.sanity <= 0) {
+        if (game.sanity <= 0 && !game.isGameOver) {
             triggerGameOver("Your sanity has been shattered...");
         }
     }
 
-    function initAudio() {
-        if (userHasInteracted) return;
-        userHasInteracted = true;
-        Object.values(sounds).forEach(sound => {
-            if (sound) {
-                sound.volume = 0;
-                sound.play().catch(e => {});
-                sound.pause();
-                sound.currentTime = 0;
-            }
-        });
-        playSound(sounds.static, 0.05);
-    }
-    
     function enterOtherworld() {
         playSound(sounds.siren, 0.4);
         elements.body.classList.add('otherworld');
@@ -187,19 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function handleCardHover(type) {
-        if (game.isGameOver || !userHasInteracted) return;
+        if (!game || game.isGameOver || !userHasInteracted) return;
         if (type === 'monster' || type === 'boss') {
             sounds.static.volume = 0.15;
         } else {
             sounds.static.volume = 0.05;
         }
-    }
-
-    function playSound(sound, volume = 1.0) {
-        if (!sound) return;
-        sound.volume = volume;
-        sound.currentTime = 0;
-        sound.play().catch(error => console.error("Audio play failed:", error.message));
     }
 
     function updateStats(type) {
@@ -218,21 +289,26 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function checkWinCondition() {
         if (game.matchedCount === game.pairsToMatch) {
-            game.isGameOver = true;
-            clearInterval(game.timerInterval);
-            sounds.static.pause();
-            setTimeout(() => {
-                playSound(sounds.victory, 0.5);
-                elements.victoryScreen.classList.remove('hidden');
-                elements.victoryScreen.classList.add('flex');
-            }, 1000);
+            triggerGameWin();
         }
+    }
+    
+    function triggerGameWin() {
+        game.isGameOver = true;
+        clearInterval(game.timerInterval);
+        stopAllMedia();
+        setTimeout(() => {
+            playSound(sounds.victory, 0.5);
+            elements.victoryScreen.classList.remove('hidden');
+            elements.victoryScreen.classList.add('flex');
+        }, 1000);
     }
 
     function triggerGameOver(message) {
+        if (game.isGameOver) return;
         game.isGameOver = true;
         clearInterval(game.timerInterval);
-        sounds.static.pause();
+        stopAllMedia();
         playSound(sounds.siren, 0.8);
         setTimeout(() => {
             alert(message);
@@ -240,51 +316,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
     
-    function showStartMenu() {
-        elements.gameContainer.classList.add('hidden');
-        elements.gameContainer.classList.remove('flex');
-        elements.victoryScreen.classList.add('hidden');
-        elements.victoryScreen.classList.remove('flex');
-        elements.startMenu.classList.remove('hidden');
-        
-        Object.values(sounds).forEach(sound => {
-            if (sound) {
-                sound.pause();
-                sound.currentTime = 0;
-            }
-        });
-    }
-
-    function initGame(difficulty) {
-        game = new GameState(difficulty);
-        
-        elements.startMenu.classList.add('hidden');
-        elements.gameContainer.classList.remove('hidden');
-        elements.gameContainer.classList.add('flex');
-        
-        createCards();
-        
-        elements.stepCounter.textContent = '0';
-        elements.timeCounter.textContent = '00:00';
-        
-        // Reseta a barra de sanidade para o estado inicial
-        game.sanity = 100;
-        updateSanity(0);
-        
-        elements.body.classList.remove('otherworld');
-        
-        if (game.timerInterval) clearInterval(game.timerInterval);
-        game.timerInterval = setInterval(() => updateStats('time'), 1000);
-        
-        if (userHasInteracted) {
-             playSound(sounds.static, 0.05);
-        }
-    }
-
     // --- INICIALIZAÇÃO E EVENT LISTENERS ---
     elements.difficultyButtons.forEach(button => {
         button.addEventListener('click', () => {
             const difficulty = button.dataset.difficulty;
+            if (!userHasInteracted) userHasInteracted = true;
             initGame(difficulty);
         });
     });
@@ -294,4 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     elements.playAgainBtn.addEventListener('click', showStartMenu);
+    elements.radioTrigger.addEventListener('click', triggerDogEnding);
+    elements.dogEndingCloseBtn.addEventListener('click', showStartMenu);
 });
