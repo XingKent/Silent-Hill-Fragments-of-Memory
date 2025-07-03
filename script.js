@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CONFIGURAÇÕES DE DIFICULDADE ---
     const difficultySettings = {
-        easy:   { pairs: 6,  sanityLoss: 115,  gridClasses: 'grid-cols-4' },
+        easy:   { pairs: 6,  sanityLoss: 5,  gridClasses: 'grid-cols-4' },
         medium: { pairs: 8,  sanityLoss: 10, gridClasses: 'grid-cols-4' },
         hard:   { pairs: 10, sanityLoss: 15, gridClasses: 'grid-cols-5' }
     };
