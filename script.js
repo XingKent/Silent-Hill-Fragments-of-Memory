@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 document.addEventListener('DOMContentLoaded', () => {
     // --- DADOS DO JOGO ---
     const ALL_CARDS = [
@@ -19,6 +20,64 @@ document.addEventListener('DOMContentLoaded', () => {
         medium: { pairs: 8,  sanityLoss: 10, gridClasses: 'grid-cols-4' },
         hard:   { pairs: 10, sanityLoss: 15, gridClasses: 'grid-cols-5' }
     };
+=======
+const CARD_DATA = [
+    { name: 'James', img: 'img/james.jpg', type: 'human' },
+    { name: 'Mary', img: 'img/mary.jpg', type: 'human' },
+    { name: 'Nurse', img: 'img/nurse.jpg', type: 'monster' },
+    { name: 'Lying Figure', img: 'img/lyingf1.png', type: 'monster' },
+    { name: 'Radio', img: 'img/radio.webp', type: 'item' },
+    { name: 'Flashlight', img: 'img/flashlight.webp', type: 'item' },
+    { name: 'Robbie', img: 'img/robbie.jpg', type: 'other' },
+    { name: 'Pyramid Head', img: 'img/pyramid_head.jpg', type: 'boss' }
+];
+
+let game;
+
+const elements = {
+    board: document.getElementById('game-board'),
+    stepCounter: document.getElementById('step-counter'),
+    timeCounter: document.getElementById('time-counter'),
+    sanityBar: document.getElementById('sanity-bar-fill'),
+    restartBtn: document.getElementById('restart-btn'),
+    victoryScreen: document.getElementById('victory-screen'),
+    playAgainBtn: document.getElementById('play-again-btn'),
+    body: document.body
+};
+
+const sounds = {
+    static: document.getElementById('static-sound'),
+    siren: document.getElementById('siren-sound'),
+    monster: document.getElementById('monster-sound'),
+    flip: document.getElementById('flip-sound'),
+    match: document.getElementById('match-sound'),
+    victory: document.getElementById('victory-sound')
+};
+
+function GameState() {
+    this.cards = [];
+    this.flippedCards = [];
+    this.matchedCount = 0;
+    this.steps = 0;
+    this.timer = 0;
+    this.sanity = 100;
+    this.isLocked = false;
+    this.isGameOver = false;
+    this.timerInterval = null;
+}
+
+function createCardElement(cardData) {
+    const cardEl = document.createElement('div');
+    cardEl.className = 'card';
+    cardEl.dataset.name = cardData.name;
+    cardEl.dataset.type = cardData.type;
+
+    cardEl.innerHTML = `
+        <div class="card-inner">
+            <div class="card-face card-back"></div>
+            <div class="card-face card-front" style="background-image: url('${cardData.img}')"></div>
+        </div>`;
+>>>>>>> master
     
     // --- ELEMENTOS DO DOM ---
     const elements = {
@@ -105,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
              playSound(sounds.static, 0.05);
         }
 
+<<<<<<< HEAD
         game = new GameState(difficulty);
         
         elements.startMenu.classList.add('hidden');
@@ -140,6 +200,58 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.dogEndingScreen.classList.remove('flex');
         elements.startMenu.classList.remove('hidden');
         elements.body.classList.remove('otherworld');
+=======
+function processTurn() {
+    game.isLocked = true;
+    updateStats('steps');
+    const [card1, card2] = game.flippedCards;
+    
+    if (card1.data.name === card2.data.name) {
+        setTimeout(handleMatch, 500);
+    } else {
+        setTimeout(handleMismatch, 1200);
+    }
+}
+
+function handleMatch() {
+    playSound(sounds.match);
+    game.flippedCards.forEach(c => {
+        c.element.classList.add('matched', 'pulse-matched');
+    });
+    game.matchedCount++;
+    game.flippedCards = [];
+    game.isLocked = false;
+    checkWinCondition();
+}
+
+function handleMismatch() {
+    playSound(sounds.monster, 0.7);
+    game.flippedCards.forEach(c => {
+        c.element.classList.remove('flipped');
+        c.element.classList.add('glitch');
+        setTimeout(() => c.element.classList.remove('glitch'), 400);
+    });
+    game.flippedCards = [];
+    updateSanity(-15);
+    game.isLocked = false;
+}
+
+function updateSanity(change) {
+    game.sanity = Math.max(0, game.sanity + change);
+
+    elements.sanityBar.style.width = `${game.sanity}%`;
+
+    if (game.sanity > 60) {
+        elements.sanityBar.style.backgroundColor = '#00a600';
+    } else if (game.sanity > 30) {
+        elements.sanityBar.style.backgroundColor = '#d49d00';
+    } else {
+        elements.sanityBar.style.backgroundColor = '#a00000';
+    }
+
+    if (game.sanity <= 50 && !elements.body.classList.contains('otherworld')) {
+        enterOtherworld();
+>>>>>>> master
     }
 
     // Função MODIFICADA para ativar o easter egg
@@ -316,6 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
     
+<<<<<<< HEAD
     // --- INICIALIZAÇÃO E EVENT LISTENERS ---
     elements.difficultyButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -333,3 +446,31 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.radioTrigger.addEventListener('click', triggerDogEnding);
     elements.dogEndingCloseBtn.addEventListener('click', showStartMenu);
 });
+=======
+    Object.values(sounds).forEach(sound => {
+        sound.pause();
+        sound.currentTime = 0;
+    });
+    
+    const gameCardsData = [...CARD_DATA, ...CARD_DATA]
+        .sort(() => 0.5 - Math.random());
+    
+    gameCardsData.forEach(cardData => {
+        const cardEl = createCardElement(cardData);
+        elements.board.appendChild(cardEl);
+    });
+    
+    elements.stepCounter.textContent = '0';
+    elements.timeCounter.textContent = '00:00';
+    updateSanity(100 - game.sanity);
+    
+    if (game.timerInterval) clearInterval(game.timerInterval);
+    game.timerInterval = setInterval(() => updateStats('time'), 1000);
+    playSound(sounds.static, 0.05);
+}
+
+elements.restartBtn.addEventListener('click', init);
+elements.playAgainBtn.addEventListener('click', init);
+
+init(); 
+>>>>>>> master
