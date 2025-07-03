@@ -3,8 +3,8 @@ const CARD_DATA = [
     { name: 'Mary', img: 'img/mary.jpg', type: 'human' },
     { name: 'Nurse', img: 'img/nurse.jpg', type: 'monster' },
     { name: 'Lying Figure', img: '', type: 'monster' },
-    { name: 'Radio', img: '', type: 'item' },
-    { name: 'Flashlight', img: '', type: 'item' },
+    { name: 'Radio', img: 'img/radio.webp', type: 'item' },
+    { name: 'Flashlight', img: 'img/flashlight.webp', type: 'item' },
     { name: 'Robbie', img: '', type: 'other' },
     { name: 'Pyramid Head', img: 'img/pyramid_head.jpg', type: 'boss' }
 ];
