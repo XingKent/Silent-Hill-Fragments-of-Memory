@@ -127,11 +127,7 @@ body {
 #sanity-bar-fill {
     height: 100%;
     width: 100%;
-<<<<<<< HEAD
     background-color: #00a600;
-=======
-    background-color: #0a0;
->>>>>>> master
     border-radius: 6px;
     transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
 }
@@ -141,26 +137,22 @@ body {
 }
 
 .letter {
+    /* Tornamos o fundo do container do texto transparente */
     background-color: transparent; 
-    box-shadow: none;
-    border: none;
-    position: relative;
+    box-shadow: none; /* Removemos a sombra da caixa */
+    border: none; /* Removemos a borda */
+    position: relative; /* Essencial para o posicionamento do pseudo-elemento */
+    
+    /* Mantemos os estilos do texto */
     font-family: 'Caveat', cursive;
     color: #e0f7fa;
     text-shadow: 
-<<<<<<< HEAD
         0 0 5px rgb(0, 12, 187),
         0 0 10px rgba(173, 216, 230, 0.7),
         0 0 20px rgb(76, 0, 255),
         0 0 35px rgb(0, 17, 255);
 
     /* Ajustes de layout e animação */
-=======
-        0 0 5px rgb(4, 0, 255),
-        0 0 10px rgb(0, 4, 255),
-        0 0 20px rgb(38, 0, 255),
-        0 0 35px rgb(66, 0, 219);
->>>>>>> master
     padding: 2rem;
     max-width: 600px;
     line-height: 2.2;
@@ -169,6 +161,7 @@ body {
     transition: transform 1s;
 }
 
+/* NOVO: Pseudo-elemento para ser o fundo de papel */
 .letter::before {
     content: '';
     position: absolute;
@@ -176,15 +169,19 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1; 
+    z-index: -1; /* Coloca o fundo atrás do texto */
+
+    /* A imagem de papel com o filtro escuro vai aqui */
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
         url('img/carta_de_mary.png');
+    
     background-size: cover;
     background-position: center;
     border-radius: 4px;
+
+    /* Efeito de desfoque nas bordas para suavizar a "caixa" */
     filter: blur(3px); 
-<<<<<<< HEAD
     
     /* Garante que o fundo tenha a mesma animação da carta */
     transform: scale(1.05); /* Um pouco maior para o blur não cortar as bordas */
@@ -215,7 +212,3 @@ body {
     z-index: 0;  /////Fica atrás do botão
     object-fit: cover;
 } */
-=======
-    transform: scale(1.05);
-}
->>>>>>> master
