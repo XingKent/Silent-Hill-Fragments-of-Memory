@@ -22,7 +22,6 @@ body {
     filter: sepia(0.3) contrast(1.4) brightness(0.8);
 }
 
-/* --- CORREÇÃO IMPORTANTE AQUI --- */
 #game-board .card {
     perspective: 1000px;
     cursor: pointer;
@@ -148,10 +147,10 @@ body {
     font-family: 'Caveat', cursive;
     color: #e0f7fa;
     text-shadow: 
-        0 0 5px rgba(255, 255, 255, 0.8),
+        0 0 5px rgb(0, 12, 187),
         0 0 10px rgba(173, 216, 230, 0.7),
-        0 0 20px rgba(0, 191, 255, 0.5),
-        0 0 35px rgba(0, 119, 190, 0.4);
+        0 0 20px rgb(76, 0, 255),
+        0 0 35px rgb(0, 17, 255);
 
     /* Ajustes de layout e animação */
     padding: 2rem;
