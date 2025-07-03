@@ -11,18 +11,27 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="relative">
     <div id="fog-overlay"></div>
 
-    <div class="container mx-auto px-4 py-8 min-h-screen flex flex-col z-20 relative">
+    <div id="start-menu" class="fixed inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center z-50">
+        <h1 class="text-5xl font-bold text-red-700 mb-4" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">SILENT HILL</h1>
+        <h2 class="text-2xl text-gray-400 italic mb-10">Fragmented Memories</h2>
+        <div class="flex flex-col gap-4 w-64">
+            <button data-difficulty="easy" class="difficulty-btn bg-gray-700 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">Easy</button>
+            <button data-difficulty="medium" class="difficulty-btn bg-gray-700 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">Medium</button>
+            <button data-difficulty="hard" class="difficulty-btn bg-gray-700 hover:bg-red-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">Hard</button>
+        </div>
+    </div>
+    
+    <div id="game-container" class="container mx-auto px-4 py-8 min-h-screen flex-col hidden">
         <header class="text-center mb-8">
             <h1 class="game-title text-3xl md:text-5xl font-bold text-red-700 tracking-wider" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">SILENT HILL</h1>
-            <p class="text-xl text-gray-400 italic">Fragmented Memories</p>
+            <p class="text-xl text-gray-400 italic">Piece together the shattered remnants of your past...</p>
         </header>
-
+        
         <div class="stats flex flex-wrap justify-between items-center mb-6 bg-black bg-opacity-40 p-4 rounded-lg border border-gray-800 shadow-lg gap-4">
             <div class="flex items-center gap-4">
                 <div>
@@ -46,11 +55,15 @@
                 <i class="fas fa-redo mr-2"></i>Restart
             </button>
         </div>
-
-        <div id="game-board" class="grid grid-cols-4 md:grid-cols-6 gap-4 mx-auto w-full max-w-5xl flex-grow">
-            </div>
+        
+        <div id="game-board" class="grid gap-4 mx-auto w-full max-w-5xl flex-grow">
+        </div>
+        
+        <div class="mt-8 text-center text-gray-500 italic">
+            <p>Listen to your radio... it warns you of danger...</p>
+        </div>
     </div>
-
+    
     <div id="victory-screen" class="fixed inset-0 bg-black bg-opacity-100 flex-col justify-center items-center z-50 hidden">
         <div class="letter text-left p-8 md:p-12 rounded-md max-w-2xl w-11/12">
             <h2 class="text-3xl font-bold mb-6">My Dearest James,</h2>
