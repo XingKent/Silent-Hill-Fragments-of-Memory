@@ -2,10 +2,10 @@ const CARD_DATA = [
     { name: 'James', img: 'img/james.jpg', type: 'human' },
     { name: 'Mary', img: 'img/mary.jpg', type: 'human' },
     { name: 'Nurse', img: 'img/nurse.jpg', type: 'monster' },
-    { name: 'Lying Figure', img: '', type: 'monster' },
+    { name: 'Lying Figure', img: 'img/lyingf1.png', type: 'monster' },
     { name: 'Radio', img: 'img/radio.webp', type: 'item' },
     { name: 'Flashlight', img: 'img/flashlight.webp', type: 'item' },
-    { name: 'Robbie', img: '', type: 'other' },
+    { name: 'Robbie', img: 'img/robbie.jpg', type: 'other' },
     { name: 'Pyramid Head', img: 'img/pyramid_head.jpg', type: 'boss' }
 ];
 
