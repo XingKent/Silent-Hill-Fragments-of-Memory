@@ -36,7 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
         radioTrigger: document.getElementById('radio-trigger'),
         dogEndingScreen: document.getElementById('dog-ending-screen'),
         dogEndingCloseBtn: document.getElementById('dog-ending-close-btn'),
-        dogVideo: document.getElementById('dog-video-bg') // Adicionado para controle fácil
+        dogVideo: document.getElementById('dog-video-bg'),
+        screenGameOver: document.getElementById('screen-game-over'),
+        videoGameOver: document.getElementById('video-game-over'),
+        gameOverCloseBtn: document.getElementById('game-over-close-btn'),
     };
 
     // --- ELEMENTOS DE ÁUDIO ---
@@ -72,17 +75,22 @@ document.addEventListener('DOMContentLoaded', () => {
         this.timerInterval = null;
     }
 
-    // NOVA FUNÇÃO para parar todas as mídias
-    function stopAllMedia() {
-        Object.values(sounds).forEach(sound => {
-            if (sound) {
+    function stopAllMedia(exclude = []) {
+        Object.entries(sounds).forEach(([key, sound]) => {
+            if (!exclude.includes(key) && sound) {
                 sound.pause();
                 sound.currentTime = 0;
             }
         });
-        if (elements.dogVideo) {
+
+        if (!exclude.includes('dogVideo') && elements.dogVideo) {
             elements.dogVideo.pause();
             elements.dogVideo.currentTime = 0;
+        }
+
+        if (!exclude.includes('videoGameOver') && elements.videoGameOver) {
+            elements.videoGameOver.pause();
+            elements.videoGameOver.currentTime = 0;
         }
     }
 
@@ -93,16 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
         sound.play().catch(error => {});
     }
     
-    // Função MODIFICADA para iniciar o jogo
     function initGame(difficulty) {
-        stopAllMedia(); // Garante que tudo para antes de começar
+        stopAllMedia(); 
 
         if (!userHasInteracted) {
             userHasInteracted = true;
-            // Toca o som de estática pela primeira vez
             playSound(sounds.static, 0.05);
         } else {
-             playSound(sounds.static, 0.05);
+            playSound(sounds.static, 0.05);
         }
 
         game = new GameState(difficulty);
@@ -110,6 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.startMenu.classList.add('hidden');
         elements.victoryScreen.classList.add('hidden');
         elements.dogEndingScreen.classList.add('hidden');
+        elements.screenGameOver.classList.add('hidden');
+            
         elements.gameContainer.classList.remove('hidden');
         elements.gameContainer.classList.add('flex');
         elements.body.classList.remove('otherworld');
@@ -118,19 +126,18 @@ document.addEventListener('DOMContentLoaded', () => {
         
         elements.stepCounter.textContent = '0';
         elements.timeCounter.textContent = '00:00';
-        updateSanity(0); // Apenas reseta a barra visualmente
+        updateSanity(0); 
         
         if (game.timerInterval) clearInterval(game.timerInterval);
         game.timerInterval = setInterval(() => updateStats('time'), 1000);
     }
 
-    // Função MODIFICADA para mostrar o menu inicial
     function showStartMenu() {
         if (game && game.timerInterval) {
             clearInterval(game.timerInterval);
         }
-        
-        stopAllMedia(); // Para tudo
+
+        stopAllMedia();
 
         elements.gameContainer.classList.add('hidden');
         elements.gameContainer.classList.remove('flex');
@@ -138,19 +145,21 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.victoryScreen.classList.remove('flex');
         elements.dogEndingScreen.classList.add('hidden');
         elements.dogEndingScreen.classList.remove('flex');
+        elements.screenGameOver.classList.add('hidden');
+        elements.screenGameOver.classList.remove('flex');
         elements.startMenu.classList.remove('hidden');
+        elements.startMenu.scrollIntoView({ behavior: 'auto' });
         elements.body.classList.remove('otherworld');
+
     }
 
-    // Função MODIFICADA para ativar o easter egg
     function triggerDogEnding() {
         if (!game || game.isGameOver) return;
         
         game.isGameOver = true;
         clearInterval(game.timerInterval);
-        stopAllMedia(); // Para os sons do jogo
+        stopAllMedia(); 
 
-        // Mostra a tela do easter egg e toca o vídeo e o som manualmente
         elements.gameContainer.classList.add('hidden');
         elements.dogEndingScreen.classList.remove('hidden');
         elements.dogEndingScreen.classList.add('flex');
@@ -304,16 +313,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    function triggerGameOver(message) {
-        if (game.isGameOver) return;
+    function triggerGameOver() {
         game.isGameOver = true;
         clearInterval(game.timerInterval);
         stopAllMedia();
-        /*playSound(sounds.siren, 0.8);*/
+
+        elements.startMenu.classList.add('hidden');
+
         setTimeout(() => {
-            alert(message);
-            showStartMenu();
+            elements.screenGameOver.classList.remove('hidden');
+            elements.screenGameOver.classList.add('flex');
+
+            if (elements.videoGameOver){
+                elements.videoGameOver.play();
+                elements.videoGameOver.muted = true;
+            };
         }, 1000);
+
+        stopAllMedia(['videoGameOver']);
     }
     
     // --- INICIALIZAÇÃO E EVENT LISTENERS ---
@@ -332,4 +349,14 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.playAgainBtn.addEventListener('click', showStartMenu);
     elements.radioTrigger.addEventListener('click', triggerDogEnding);
     elements.dogEndingCloseBtn.addEventListener('click', showStartMenu);
+
+    elements.gameOverCloseBtn = document.getElementById('game-over-close-btn');
+
+    elements.gameOverCloseBtn.addEventListener('click', () => {
+
+        elements.screenGameOver.classList.add('hidden');
+        elements.screenGameOver.classList.remove('flex');
+
+        showStartMenu();
+    });
 });
