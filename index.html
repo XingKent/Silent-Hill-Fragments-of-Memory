@@ -17,7 +17,7 @@
     <div id="fog-overlay"></div>
 
     <div id="start-menu" class="fixed inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center z-50">
-        <h1 class="text-5xl font-bold text-red-700 mb-4" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">SILENT HILL</h1>
+        <h1 class="text-5xl font-bold text-red-700 mb-4" style="text-shadow: 2px 2px 8px rgba(128, 1, 1, 0.7);">SILENT HILL</h1>
         <h2 class="text-2xl text-gray-400 italic mb-10">Fragmented Memories</h2>
         <div class="flex flex-col gap-4 w-64">
             <button data-difficulty="easy" class="difficulty-btn bg-gray-700 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">Easy</button>
@@ -79,20 +79,21 @@
         </div>
     </div>
     
-    <!-- tela derrota 
-    <div id="game-over-screen" class="screen-overlay">
-        <video loop muted playsinline id="game-over-video">
+    <!-- tela game over -->
+    <div id="screen-game-over" class="fixed inset-0 bg-black bg-opacity-85 z-50 flex flex-col justify-center items-center hidden">
+        <video loop playsinline id="video-game-over">
             <source src="audio/gameovertela.mp4" type="video/mp4">
-            Seu navegador não suporta vídeos.
+            Seu navegador não suporta a tag de vídeo.
         </video>
 
-        <div class="relative z-10 w-full h-full flex flex-col justify-end items-center pb-10">
-            <button id="try-again-btn" class="bg-gray-800 bg-opacity-70 hover:bg-red-800 text-white px-8 py-3 rounded-lg transition-colors duration-300 border border-gray-600">
-                <i class="fas fa-undo mr-2"></i>Tentar Novamente
+        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center">
+            <div class="flex-grow"></div> <button id="game-over-close-btn" class="mb-8 bg-gray-800 bg-opacity-70 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+                <i class="fas fa-times mr-2"></i>Close
             </button>
         </div>
+        
     </div>
-    -->
+
     <!-- tela easter egg -->
     <div id="dog-ending-screen" class="fixed inset-0 bg-black justify-center items-center z-50 hidden">
         <video loop playsinline id="dog-video-bg">
@@ -112,7 +113,6 @@
     <audio id="siren-sound" src="audio/sirene.mp3"></audio>
     <audio id="monster-sound" src="audio/squeal.mp3"></audio>
     <audio id="flip-sound" src="audio/pown.mp3"></audio>
-    <!-- <audio id="match-sound" src="https://vgmsite.com/soundtracks/silent-hill-2-sound-effects/hyswdgdu/Save%20Sound.mp3"></audio> -->
     <audio id="victory-sound" src="audio/receber_item.mp3"></audio>
     
     <script src="script.js" defer></script>
