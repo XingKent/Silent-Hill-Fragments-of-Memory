@@ -185,7 +185,7 @@ body {
     height: auto;
     z-index: 0;
     object-fit: cover;
-};
+}
 
 #video-game-over {
     position: absolute;
