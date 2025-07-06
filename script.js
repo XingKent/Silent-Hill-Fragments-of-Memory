@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         siren: document.getElementById('siren-sound'),
         monster: document.getElementById('monster-sound'),
         flip: document.getElementById('flip-sound'),
-        match: document.getElementById('match-sound'),
+        //match: document.getElementById('match-sound'), 
         victory: document.getElementById('victory-sound'),
         dog: document.getElementById('dog-sound')
     };
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function handleMatch() {
-        playSound(sounds.match);
+        //playSound(sounds.match);
         game.flippedCards.forEach(c => {
             c.element.classList.add('matched', 'pulse-matched');
         });
