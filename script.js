@@ -302,6 +302,10 @@ document.addEventListener('DOMContentLoaded', () => {
         game.isGameOver = true;
         clearInterval(game.timerInterval);
         stopAllMedia();
+
+        elements.body.classList.remove('otherworld');
+
+        
         setTimeout(() => {
             playSound(sounds.victory, 0.5);
             elements.victoryScreen.classList.remove('hidden');
