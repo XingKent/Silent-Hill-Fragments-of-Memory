@@ -305,7 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         elements.body.classList.remove('otherworld');
 
-        
         setTimeout(() => {
             playSound(sounds.victory, 0.5);
             elements.victoryScreen.classList.remove('hidden');
@@ -319,8 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
         stopAllMedia();
 
         elements.body.classList.remove('otherworld'); 
-
-        elements.startMenu.classList.add('hidden');
 
         setTimeout(() => {
             elements.screenGameOver.classList.remove('hidden');
