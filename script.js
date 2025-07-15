@@ -136,9 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (game && game.timerInterval) {
             clearInterval(game.timerInterval);
         }
-
         stopAllMedia();
-
         elements.gameContainer.classList.add('hidden');
         elements.gameContainer.classList.remove('flex');
         elements.victoryScreen.classList.add('hidden');
@@ -149,8 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.screenGameOver.classList.remove('flex');
         elements.startMenu.classList.remove('hidden');
         elements.startMenu.scrollIntoView({ behavior: 'auto' });
-        elements.body.classList.remove('otherworld');
-
     }
 
     function triggerDogEnding() {
@@ -317,6 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
         game.isGameOver = true;
         clearInterval(game.timerInterval);
         stopAllMedia();
+
+        elements.body.classList.remove('otherworld'); 
 
         elements.startMenu.classList.add('hidden');
 
