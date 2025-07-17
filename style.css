@@ -201,17 +201,23 @@ body {
 };
 
 @media (max-width: 600px) {
+    #game-board {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
     #game-board .card {
-        width: 90px;
-        height: 130px; 
+        width: calc(33.33% - 8px);
+        height: auto;
+        aspect-ratio: 7 / 10;
     }
 
     .letter {
-        font-size: 1.2rem;
-        line-height: 1.8;
+        font-size: 1rem;
+        line-height: 1.6;
     }
 
     .game-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 }
