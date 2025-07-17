@@ -199,3 +199,19 @@ body {
     z-index: 0;
     object-fit: cover;
 };
+
+@media (max-width: 600px) {
+    #game-board .card {
+        width: 90px;
+        height: 130px; 
+    }
+
+    .letter {
+        font-size: 1.2rem;
+        line-height: 1.8;
+    }
+
+    .game-title {
+        font-size: 2.5rem;
+    }
+}
