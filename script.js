@@ -13,11 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Maria', img: 'img/maria.jpg', type: 'human' }
     ];
 
+    // --- VERIFICAÇÕES DE JOGO ---
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
     // --- CONFIGURAÇÕES DE DIFICULDADE ---
     const difficultySettings = {
-        easy:   { pairs: 6,  sanityLoss: 5,  gridClasses: 'grid-cols-4' },
-        medium: { pairs: 8,  sanityLoss: 10, gridClasses: 'grid-cols-4' },
-        hard:   { pairs: 10, sanityLoss: 15, gridClasses: 'grid-cols-5' }
+        easy:   { pairs: 6,  sanityLoss: 5,  gridClasses: 'grid-cols-3 sm:grid-cols-4' }, 
+        medium: { pairs: 8,  sanityLoss: 10, gridClasses: 'grid-cols-4' }, 
+        hard:   { pairs: 10, sanityLoss: 15, gridClasses: 'grid-cols-4 md:grid-cols-5' } 
     };
     
     // --- ELEMENTOS DO DOM ---
@@ -330,6 +333,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
 
         stopAllMedia(['videoGameOver']);
+    }
+
+    function handleCardHover(type) {
+        if (isTouchDevice || !game || game.isGameOver || !userHasInteracted) return;
+        
+        if (type === 'monster' || type === 'boss') {
+            sounds.static.volume = 0.15;
+        } else {
+            sounds.static.volume = 0.05;
+        }
     }
     
     // --- INICIALIZAÇÃO E EVENT LISTENERS ---
