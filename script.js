@@ -112,6 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initGame(difficulty) {
+        //limpa o cronômetro do jogo anterior (se ele existir)
+        if (game && game.timerInterval) {
+            clearInterval(game.timerInterval);
+        }
+
         stopAllMedia();
 
         if (!userHasInteracted) {
@@ -121,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             playSound(sounds.static, 0.05);
         }
 
+        //cria o novo estado do jogo
         game = new GameState(difficulty);
 
         elements.startMenu.classList.add('hidden');
@@ -138,14 +144,16 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.timeCounter.textContent = '00:00';
         updateSanity(0);
 
-        if (game.timerInterval) clearInterval(game.timerInterval);
+        //inicia o novo cronômetro
         game.timerInterval = setInterval(() => updateStats('time'), 1000);
     }
 
     function showStartMenu() {
         if (game && game.timerInterval) {
             clearInterval(game.timerInterval);
+            game.timerInterval = null; //limpa a referencia
         }
+
         stopAllMedia();
         elements.gameContainer.classList.add('hidden');
         elements.gameContainer.classList.remove('flex');
