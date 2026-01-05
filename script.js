@@ -1,3 +1,10 @@
+//SONS:
+//Som que toca quando você erra o par = playSound(sounds.monster, 0.1)
+//Som ambiente (estática) = playSound(sounds.static, 0.05)
+//Som da Sirene = playSound(sounds.siren, 0.4)
+//Som de Vitória = playSound(sounds.victory, 0.5)
+//Final do Cachorro = playSound(sounds.dog, 0.6)
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- DADOS DO JOGO ---
     const ALL_CARDS = [
@@ -18,11 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CONFIGURAÇÕES DE DIFICULDADE ---
     const difficultySettings = {
-        easy:   { pairs: 6,  sanityLoss: 5,  gridClasses: 'grid-cols-3 sm:grid-cols-4' }, 
-        medium: { pairs: 8,  sanityLoss: 10, gridClasses: 'grid-cols-4' }, 
-        hard:   { pairs: 10, sanityLoss: 15, gridClasses: 'grid-cols-4 md:grid-cols-5' } 
+        easy: { pairs: 6, sanityLoss: 5, gridClasses: 'grid-cols-3 sm:grid-cols-4' },
+        medium: { pairs: 8, sanityLoss: 10, gridClasses: 'grid-cols-4' },
+        hard: { pairs: 10, sanityLoss: 15, gridClasses: 'grid-cols-4 md:grid-cols-5' }
     };
-    
+
     // --- ELEMENTOS DO DOM ---
     const elements = {
         board: document.getElementById('game-board'),
@@ -55,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         victory: document.getElementById('victory-sound'),
         dog: document.getElementById('dog-sound')
     };
-    
+
     // --- ESTADO DO JOGO ---
     let game;
     let userHasInteracted = false;
@@ -101,11 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!sound) return;
         sound.volume = volume;
         sound.currentTime = 0;
-        sound.play().catch(error => {});
+        sound.play().catch(error => { });
     }
-    
+
     function initGame(difficulty) {
-        stopAllMedia(); 
+        stopAllMedia();
 
         if (!userHasInteracted) {
             userHasInteracted = true;
@@ -115,22 +122,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         game = new GameState(difficulty);
-        
+
         elements.startMenu.classList.add('hidden');
         elements.victoryScreen.classList.add('hidden');
         elements.dogEndingScreen.classList.add('hidden');
         elements.screenGameOver.classList.add('hidden');
-            
+
         elements.gameContainer.classList.remove('hidden');
         elements.gameContainer.classList.add('flex');
         elements.body.classList.remove('otherworld');
-        
+
         createCards();
-        
+
         elements.stepCounter.textContent = '0';
         elements.timeCounter.textContent = '00:00';
-        updateSanity(0); 
-        
+        updateSanity(0);
+
         if (game.timerInterval) clearInterval(game.timerInterval);
         game.timerInterval = setInterval(() => updateStats('time'), 1000);
     }
@@ -154,23 +161,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function triggerDogEnding() {
         if (!game || game.isGameOver) return;
-        
+
         game.isGameOver = true;
         clearInterval(game.timerInterval);
-        stopAllMedia(); 
+        stopAllMedia();
 
         elements.gameContainer.classList.add('hidden');
         elements.dogEndingScreen.classList.remove('hidden');
         elements.dogEndingScreen.classList.add('flex');
-        
+
         if (elements.dogVideo) elements.dogVideo.play();
         playSound(sounds.dog, 0.6);
     }
-    
+
     function createCards() {
         const cardPool = ALL_CARDS.slice(0, game.pairsToMatch);
         const gameCardsData = [...cardPool, ...cardPool].sort(() => 0.5 - Math.random());
-        
+
         elements.board.innerHTML = '';
         const baseClasses = 'grid gap-4 mx-auto w-full max-w-5xl flex-grow';
         elements.board.className = `${baseClasses} ${game.gridClasses}`;
@@ -195,10 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cardEl.addEventListener('mouseenter', () => handleCardHover(cardData.type));
         return cardEl;
     }
-    
+
     function handleCardClick(cardEl, cardData) {
         if (game.isLocked || cardEl.classList.contains('flipped') || cardEl.classList.contains('matched') || game.isGameOver) return;
-        
+
         playSound(sounds.flip);
         cardEl.classList.add('flipped');
         game.flippedCards.push({ element: cardEl, data: cardData });
@@ -212,14 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
         game.isLocked = true;
         updateStats('steps');
         const [card1, card2] = game.flippedCards;
-        
+
         if (card1.data.name === card2.data.name) {
             setTimeout(handleMatch, 500);
         } else {
             setTimeout(handleMismatch, 1200);
         }
     }
-    
+
     function handleMatch() {
         //playSound(sounds.match);
         game.flippedCards.forEach(c => {
@@ -232,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleMismatch() {
-        playSound(sounds.monster, 0.7);
+        playSound(sounds.monster, 0.1);
         game.flippedCards.forEach(c => {
             c.element.classList.remove('flipped');
             c.element.classList.add('glitch');
@@ -242,14 +249,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSanity(-game.sanityLossPerMistake);
         game.isLocked = false;
     }
-    
+
     function updateSanity(change) {
         game.sanity += change;
         if (game.sanity > 100) game.sanity = 100;
         if (game.sanity < 0) game.sanity = 0;
-    
+
         elements.sanityBar.style.width = `${game.sanity}%`;
-    
+
         if (game.sanity > 60) {
             elements.sanityBar.style.backgroundColor = '#00a600';
         } else if (game.sanity > 30) {
@@ -271,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.body.classList.add('otherworld');
         sounds.static.volume = 0.2;
     }
-    
+
     function handleCardHover(type) {
         if (!game || game.isGameOver || !userHasInteracted) return;
         if (type === 'monster' || type === 'boss') {
@@ -294,13 +301,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (game.timer > 0 && game.timer % 15 === 0) updateSanity(-2);
         }
     }
-    
+
     function checkWinCondition() {
         if (game.matchedCount === game.pairsToMatch) {
             triggerGameWin();
         }
     }
-    
+
     function triggerGameWin() {
         game.isGameOver = true;
         clearInterval(game.timerInterval);
@@ -320,13 +327,13 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(game.timerInterval);
         stopAllMedia();
 
-        elements.body.classList.remove('otherworld'); 
+        elements.body.classList.remove('otherworld');
 
         setTimeout(() => {
             elements.screenGameOver.classList.remove('hidden');
             elements.screenGameOver.classList.add('flex');
 
-            if (elements.videoGameOver){
+            if (elements.videoGameOver) {
                 elements.videoGameOver.play();
                 elements.videoGameOver.muted = true;
             };
@@ -337,14 +344,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleCardHover(type) {
         if (isTouchDevice || !game || game.isGameOver || !userHasInteracted) return;
-        
+
         if (type === 'monster' || type === 'boss') {
             sounds.static.volume = 0.15;
         } else {
             sounds.static.volume = 0.05;
         }
     }
-    
+
     // --- INICIALIZAÇÃO E EVENT LISTENERS ---
     elements.difficultyButtons.forEach(button => {
         button.addEventListener('click', () => {
