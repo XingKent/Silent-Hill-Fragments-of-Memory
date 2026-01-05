@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.dogEndingScreen.classList.add('flex');
 
         if (elements.dogVideo) elements.dogVideo.play();
-        playSound(sounds.dog, 0.6);
+        playSound(sounds.dog, 0.3);
     }
 
     function createCards() {
@@ -385,5 +385,13 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.screenGameOver.classList.remove('flex');
 
         showStartMenu();
+    });
+
+    elements.navTitle = document.getElementById('nav-title');
+
+    elements.navTitle.addEventListener('click', () => {
+        if (confirm("Deseja abandonar as memórias e voltar ao menu principal?")) {
+            showStartMenu();
+        }
     });
 });
