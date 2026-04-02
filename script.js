@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
         flip: document.getElementById('flip-sound'),
         //match: document.getElementById('match-sound'), 
         victory: document.getElementById('victory-sound'),
-        dog: document.getElementById('dog-sound')
     };
 
     // --- ESTADO DO JOGO ---
