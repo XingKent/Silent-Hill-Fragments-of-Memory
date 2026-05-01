@@ -58,6 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Abstract Daddy",  img: "img/abstdad.jpg",      type: "boss",    powerup: null      },
     { name: "Pyramid Head",    img: "img/pyramid_head.jpg", type: "boss",    powerup: "execute" },
     { name: "Maria",           img: "img/maria.jpg",        type: "human",   powerup: "shuffle" },
+    { name: "Eddie",           img: "img/eddie.jpg",        type: "human",   powerup: "rage"    },
+    { name: "Angela",          img: "img/angela.jpg",       type: "human",   powerup: "vanish"  },
+    { name: "Laura",           img: "img/laura.jpg",        type: "other",   powerup: "forget"  },
+    { name: "Mannequin",       img: "img/mannequin.jpg",    type: "monster", powerup: null      },
+    { name: "Maria Boss",      img: "img/maria_boss.jpg",   type: "boss",    powerup: null      },
   ];
 
   // ============================================================
@@ -69,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     easy:      { pairs: 6,  sanityLoss: 5,  gridClasses: "grid-cols-3 sm:grid-cols-4" },
     medium:    { pairs: 8,  sanityLoss: 10, gridClasses: "grid-cols-4" },
     hard:      { pairs: 10, sanityLoss: 15, gridClasses: "grid-cols-4 md:grid-cols-5" },
-    nightmare: { pairs: 10, sanityLoss: 20, gridClasses: "grid-cols-4 md:grid-cols-5" },
+    nightmare: { pairs: 15, sanityLoss: 20, gridClasses: "grid-cols-5" },
   };
 
   // ============================================================
@@ -165,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     this.timerFrozen = false;
     this.chaosModeActive = false;
     this.chaosModeTimeout = null;
+    this.rageModeActive = false;
     this.revealedCardNames = new Set(); // cartas viradas pelo player (para UFO easter egg)
   }
 
@@ -405,6 +411,9 @@ document.addEventListener("DOMContentLoaded", () => {
       chaos:   "Chaos Mode",
       execute: "Execute Pair",
       shuffle: "Shuffle Cards",
+      rage:    "Double Damage on Next Mistake",
+      vanish:  "Eliminate the Abstract Daddy",
+      forget:  "Remove a Pair of Characters",
     };
     return labels[powerup] || "";
   }
@@ -484,7 +493,15 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => c.element.classList.remove("glitch"), 400);
     });
     game.flippedCards = [];
-    updateSanity(-game.sanityLossPerMistake);
+
+    const loss = game.rageModeActive
+      ? game.sanityLossPerMistake * 2
+      : game.sanityLossPerMistake;
+    if (game.rageModeActive) {
+      game.rageModeActive = false;
+      showPowerupNotification("EDDIE — Double damage applied!");
+    }
+    updateSanity(-loss);
     game.isLocked = false;
   }
 
@@ -510,6 +527,15 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "shuffle":
         activateShuffle();
+        break;
+      case "rage":
+        activateRage();
+        break;
+      case "vanish":
+        activateVanish();
+        break;
+      case "forget":
+        activateForget();
         break;
     }
   }
@@ -605,20 +631,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const unmatchedCards = [...elements.board.querySelectorAll(".card:not(.matched):not(.flipped)")];
     if (unmatchedCards.length < 2) return;
 
-    // Salvar posições e embaralhar
     const positions = unmatchedCards.map(el => ({
       nextSibling: el.nextSibling,
       parent: el.parentNode,
     }));
 
     const shuffled = [...unmatchedCards].sort(() => 0.5 - Math.random());
-
-    shuffled.forEach((card, i) => {
-      card.classList.add("shuffle-anim");
-    });
+    shuffled.forEach((card) => card.classList.add("shuffle-anim"));
 
     setTimeout(() => {
-      // Reinserir em posições embaralhadas
       shuffled.forEach((card, i) => {
         const ref = positions[i];
         if (ref.nextSibling) {
@@ -631,6 +652,71 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
 
     showPowerupNotification("MARIA — Cards shuffled! She confuses you...");
+  }
+
+  function activateRage() {
+    game.rageModeActive = true;
+    showPowerupNotification("EDDIE — Next mistake will cause double damage!");
+  }
+
+  function activateVanish() {
+    // Remove o par do Abstract Daddy se ainda não foi revelado/combinado
+    const abstractCards = [...elements.board.querySelectorAll(".card:not(.matched)")]
+      .filter(el => el.dataset.name === "Abstract Daddy" && !el.classList.contains("flipped"));
+
+    if (abstractCards.length === 0) {
+      showPowerupNotification("ANGELA — Abstract Daddy already found...");
+      return;
+    }
+
+    abstractCards.forEach(el => {
+      el.classList.add("executed");
+      setTimeout(() => el.remove(), 600);
+    });
+
+    game.matchedCount++;
+    showPowerupNotification("ANGELA — Abstract Daddy eliminated from the shadows!");
+    setTimeout(checkWinCondition, 700);
+  }
+
+  function activateForget() {
+    const humanTypes = ["human", "other"];
+    const humanNames = ALL_CARDS
+      .filter(c => humanTypes.includes(c.type))
+      .map(c => c.name);
+
+    // Pegar pares de personagens ainda não combinados no board
+    const candidates = new Set();
+    const seen = new Set();
+    const unmatched = [...elements.board.querySelectorAll(".card:not(.matched)")];
+
+    unmatched.forEach(el => {
+      const name = el.dataset.name;
+      if (!humanNames.includes(name)) return;
+      if (seen.has(name)) {
+        candidates.add(name);
+      } else {
+        seen.add(name);
+      }
+    });
+
+    if (candidates.size === 0) {
+      showPowerupNotification("LAURA — There are no more characters to forget...");
+      return;
+    }
+
+    const candidateArr = [...candidates];
+    const targetName = candidateArr[Math.floor(Math.random() * candidateArr.length)];
+    const toRemove = unmatched.filter(el => el.dataset.name === targetName);
+
+    toRemove.forEach(el => {
+      el.classList.add("executed");
+      setTimeout(() => el.remove(), 600);
+    });
+
+    game.matchedCount++;
+    showPowerupNotification(`LAURA — She forgot "${targetName}"... and you did too.`);
+    setTimeout(checkWinCondition, 700);
   }
 
   function showPowerupNotification(msg) {
