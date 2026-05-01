@@ -4,18 +4,20 @@
     --primary-text: #c7b299;
     --danger-text: #a00;
     --dark-bg: #111111;
-    --otherworld-bg: #2a0505;
     --card-bg: #1c1c1c;
     --border-color: #4a0000;
     --border-dim: #2a2a2a;
     --accent-red: #8b0000;
     --accent-red-glow: rgba(139, 0, 0, 0.35);
     --fog-color: rgba(40, 40, 40, 0.18);
+
+    /* Otherworld: vermelho enferrujado estilo filme 2006 */
+    --otherworld-bg: #1a0800;
+    --otherworld-rust1: #8b2500;
+    --otherworld-rust2: #5a1800;
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     font-family: 'Special Elite', cursive;
@@ -26,19 +28,55 @@ body {
     min-height: 100vh;
 }
 
-/* --- OTHERWORLD --- */
+/* ============================================================
+   OTHERWORLD — vermelho enferrujado, legível
+   ============================================================ */
 .otherworld {
     background-color: var(--otherworld-bg);
-    filter: sepia(0.4) contrast(1.3) brightness(0.75) hue-rotate(-10deg);
+    filter:
+        sepia(0.6)
+        contrast(1.15)
+        brightness(0.9)
+        saturate(1.8)
+        hue-rotate(-8deg);
 }
 
-/* --- FOG --- */
+/* Vinheta enferrujada nas bordas */
+.otherworld::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 40%,
+        rgba(80, 10, 0, 0.55) 100%
+    );
+    animation: rust-pulse 3s ease-in-out infinite;
+}
+
+@keyframes rust-pulse {
+    0%, 100% { opacity: 0.7; }
+    50%       { opacity: 1; }
+}
+
+/* Cartas ficam com tom enferrujado mas ainda visíveis */
+.otherworld .card-back {
+    filter: sepia(0.4) saturate(1.5) brightness(1.1);
+}
+
+.otherworld .card-front {
+    filter: sepia(0.3) saturate(1.3) brightness(1.05);
+}
+
+/* ============================================================
+   FOG
+   ============================================================ */
 #fog-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 200%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 200%; height: 100%;
     background: linear-gradient(
         90deg,
         transparent 0%,
@@ -57,12 +95,52 @@ body {
     100% { transform: translateX(0%); }
 }
 
-/* --- TELA INICIAL --- */
+/* ============================================================
+   MENSAGEM ATMOSFÉRICA
+   ============================================================ */
+.atmospheric-msg {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    color: rgba(180, 150, 120, 0.0);
+    text-shadow: 0 0 12px rgba(120, 60, 20, 0);
+    text-align: center;
+    max-width: 80vw;
+    pointer-events: none;
+    transition: color 1.2s ease, text-shadow 1.2s ease, opacity 1.2s ease;
+    opacity: 0;
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+}
+
+.atmospheric-msg.atm-visible {
+    opacity: 1;
+    color: rgba(195, 160, 120, 0.85);
+    text-shadow:
+        0 0 8px rgba(150, 80, 30, 0.6),
+        0 0 20px rgba(100, 40, 10, 0.3);
+    animation: atm-fadein 1.5s ease forwards;
+}
+
+@keyframes atm-fadein {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ============================================================
+   TELA INICIAL
+   ============================================================ */
 #start-menu {
     background: radial-gradient(ellipse at center, #1a0505 0%, #0a0000 70%, #000 100%);
 }
 
-/* --- TÍTULO --- */
+/* ============================================================
+   TÍTULO
+   ============================================================ */
 .game-title {
     letter-spacing: 0.15em;
     text-shadow:
@@ -71,7 +149,9 @@ body {
         2px 2px 0px #000;
 }
 
-/* --- BOTÕES DE DIFICULDADE --- */
+/* ============================================================
+   BOTÕES DE DIFICULDADE
+   ============================================================ */
 .difficulty-btn {
     background: transparent;
     border: 1px solid #3a1a1a;
@@ -103,11 +183,44 @@ body {
     box-shadow: 0 0 12px var(--accent-red-glow), inset 0 0 12px rgba(80, 0, 0, 0.3);
 }
 
-.difficulty-btn:hover::before {
-    opacity: 0.08;
+.difficulty-btn:hover::before { opacity: 0.08; }
+
+/* Botão Nightmare */
+.nightmare-btn {
+    border: 1px solid #5a1a00;
+    color: #b04020;
+    background: rgba(20, 5, 0, 0.6);
+    animation: nightmare-flicker 4s ease-in-out infinite;
 }
 
-/* --- BARRA DE STATS --- */
+.nightmare-btn:hover {
+    border-color: #cc3300;
+    color: #ff6040;
+    background: rgba(60, 10, 0, 0.7);
+    box-shadow: 0 0 16px rgba(180, 40, 0, 0.5), inset 0 0 12px rgba(120, 20, 0, 0.3);
+    text-shadow: 0 0 10px rgba(255, 80, 40, 0.7);
+}
+
+@keyframes nightmare-flicker {
+    0%, 90%, 100% { opacity: 1; }
+    92%            { opacity: 0.7; }
+    94%            { opacity: 1; }
+    96%            { opacity: 0.5; }
+    98%            { opacity: 0.9; }
+}
+
+.nightmare-hint {
+    animation: nightmare-hint-pulse 3s ease-in-out infinite;
+}
+
+@keyframes nightmare-hint-pulse {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 0.8; }
+}
+
+/* ============================================================
+   STATS BAR
+   ============================================================ */
 .stats {
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid #1e1e1e;
@@ -128,7 +241,15 @@ body {
     text-shadow: 0 0 6px rgba(150, 20, 20, 0.4);
 }
 
-/* --- BOTÃO RESTART --- */
+.nightmare-mode-text {
+    color: #cc3300;
+    text-shadow: 0 0 8px rgba(200, 50, 0, 0.5);
+    animation: nightmare-flicker 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   BOTÃO RESTART
+   ============================================================ */
 #restart-btn {
     background: transparent;
     border: 1px solid #3a1010;
@@ -149,7 +270,35 @@ body {
     background: rgba(80, 0, 0, 0.15);
 }
 
-/* --- SANIDADE --- */
+/* ============================================================
+   NOTIFICAÇÃO DE POWER-UP
+   ============================================================ */
+.powerup-notification {
+    text-align: center;
+    font-family: 'Special Elite', cursive;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    color: #d4a060;
+    background: rgba(10, 5, 0, 0.85);
+    border: 1px solid #4a2a00;
+    border-radius: 3px;
+    padding: 0.5rem 1.5rem;
+    margin: 0 auto 1rem auto;
+    max-width: 500px;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    text-shadow: 0 0 8px rgba(200, 120, 20, 0.4);
+}
+
+.powerup-notification.powerup-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================================
+   SANIDADE
+   ============================================================ */
 #sanity-bar-container {
     width: 100%;
     height: 6px;
@@ -177,7 +326,9 @@ body {
     border-radius: inherit;
 }
 
-/* --- CARTAS --- */
+/* ============================================================
+   CARTAS
+   ============================================================ */
 #game-board .card {
     perspective: 1200px;
     cursor: pointer;
@@ -189,6 +340,30 @@ body {
 
 #game-board .card:hover:not(.matched) {
     transform: translateY(-3px);
+}
+
+/* Indicador de power-up no canto da carta (Nightmare) */
+.has-powerup .card-front {
+    border-color: rgba(200, 120, 20, 0.6) !important;
+    box-shadow: 0 0 10px rgba(180, 100, 10, 0.3) !important;
+}
+
+.powerup-indicator {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffaa30 0%, #cc6600 100%);
+    box-shadow: 0 0 6px rgba(255, 150, 30, 0.8);
+    animation: powerup-dot-pulse 2s ease-in-out infinite;
+    z-index: 2;
+}
+
+@keyframes powerup-dot-pulse {
+    0%, 100% { box-shadow: 0 0 4px rgba(255, 150, 30, 0.6); transform: scale(1); }
+    50%       { box-shadow: 0 0 10px rgba(255, 180, 60, 1); transform: scale(1.3); }
 }
 
 .card-inner {
@@ -219,9 +394,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     transform: rotateY(0deg);
-    box-shadow:
-        0 2px 8px rgba(0,0,0,0.6),
-        inset 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.5);
 }
 
 .card-back::after {
@@ -240,9 +413,35 @@ body {
     background-position: center;
     border: 1px solid #4a3a2a;
     box-shadow: 0 2px 12px rgba(0,0,0,0.8);
+    overflow: hidden;
 }
 
-/* --- ANIMAÇÕES --- */
+/* Carta executada pelo Pyramid Head */
+.card.executed {
+    animation: execute-anim 0.6s ease forwards;
+}
+
+@keyframes execute-anim {
+    0%   { opacity: 1; transform: scale(1); filter: none; }
+    40%  { opacity: 0.8; transform: scale(1.05); filter: brightness(2) saturate(0); }
+    100% { opacity: 0; transform: scale(0.8) rotateZ(5deg); filter: brightness(0); }
+}
+
+/* Carta embaralhada pelo Maria */
+.card.shuffle-anim {
+    animation: shuffle-anim 0.5s ease;
+}
+
+@keyframes shuffle-anim {
+    0%   { opacity: 1; }
+    25%  { opacity: 0.3; transform: scale(0.9) rotateZ(-5deg); }
+    75%  { opacity: 0.3; transform: scale(0.9) rotateZ(5deg); }
+    100% { opacity: 1; transform: scale(1) rotateZ(0); }
+}
+
+/* ============================================================
+   ANIMAÇÕES
+   ============================================================ */
 .glitch {
     animation: glitch-animation 0.4s linear;
 }
@@ -265,7 +464,9 @@ body {
     50%       { box-shadow: 0 0 18px 5px rgba(180, 150, 110, 0.08); }
 }
 
-/* --- TELA DE VITÓRIA --- */
+/* ============================================================
+   TELA DE VITÓRIA (carta de Mary)
+   ============================================================ */
 #victory-screen {
     z-index: 100;
     background: radial-gradient(ellipse at center, #000510 0%, #000 100%);
@@ -310,7 +511,49 @@ body {
     transform: scale(1.04);
 }
 
-/* --- BOTÃO PLAY AGAIN --- */
+/* Label do ending */
+.ending-label {
+    margin-top: 1.5rem;
+    font-family: 'Special Elite', cursive;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+.ending-inwater {
+    color: #6090cc;
+    border: 1px solid rgba(60, 100, 200, 0.4);
+    text-shadow: 0 0 8px rgba(80, 120, 220, 0.5);
+    background: rgba(10, 20, 60, 0.5);
+}
+
+.ending-leave {
+    color: #a0b880;
+    border: 1px solid rgba(100, 150, 60, 0.4);
+    text-shadow: 0 0 8px rgba(100, 160, 60, 0.4);
+    background: rgba(15, 30, 10, 0.5);
+}
+
+.ending-maria {
+    color: #cc88aa;
+    border: 1px solid rgba(180, 80, 120, 0.4);
+    text-shadow: 0 0 8px rgba(200, 80, 140, 0.5);
+    background: rgba(40, 10, 25, 0.5);
+}
+
+.ending-rebirth {
+    color: #ccaa60;
+    border: 1px solid rgba(180, 140, 40, 0.4);
+    text-shadow: 0 0 8px rgba(200, 160, 40, 0.5);
+    background: rgba(30, 20, 5, 0.5);
+}
+
+/* ============================================================
+   BOTÃO PLAY AGAIN
+   ============================================================ */
 #play-again-btn {
     background: transparent;
     border: 1px solid rgba(100, 140, 220, 0.35);
@@ -333,24 +576,45 @@ body {
     background: rgba(40, 60, 140, 0.1);
 }
 
-/* --- GAME OVER / DOG ENDING --- */
+/* ============================================================
+   GAME OVER / DOG / UFO — vídeos em tela cheia
+   ============================================================ */
 #dog-video-bg,
-#video-game-over {
+#video-game-over,
+#ufo-video-bg {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
+    min-width: 100%; min-height: 100%;
+    width: auto; height: auto;
     z-index: 0;
     object-fit: cover;
 }
 
-/* --- BOTÕES DE FECHAR (game over / dog) --- */
+/* Texto do UFO ending */
+.ufo-text {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    color: rgba(180, 220, 255, 0.85);
+    text-shadow:
+        0 0 10px rgba(100, 180, 255, 0.8),
+        0 0 30px rgba(60, 120, 255, 0.4);
+    letter-spacing: 0.05em;
+    animation: ufo-text-appear 2s ease forwards;
+    opacity: 0;
+}
+
+@keyframes ufo-text-appear {
+    0%   { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   BOTÕES FECHAR
+   ============================================================ */
 #game-over-close-btn,
-#dog-ending-close-btn {
+#dog-ending-close-btn,
+#ufo-ending-close-btn {
     background: rgba(10, 10, 10, 0.75);
     border: 1px solid #2a2a2a;
     color: #6a5a5a;
@@ -364,18 +628,60 @@ body {
 }
 
 #game-over-close-btn:hover,
-#dog-ending-close-btn:hover {
+#dog-ending-close-btn:hover,
+#ufo-ending-close-btn:hover {
     border-color: #5a4040;
     color: #b09090;
     background: rgba(30, 10, 10, 0.8);
 }
 
-@keyframes radio-pulse {
-    0%, 100% { opacity: 0.7; }
-    50%       { opacity: 1; }
+/* Skip btn (true endings) */
+#true-ending-skip-btn {
+    background: rgba(10, 10, 10, 0.75);
+    border: 1px solid #2a2a2a;
+    color: #6a5a5a;
+    font-family: 'Special Elite', cursive;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.2s ease;
 }
 
-/* --- RESPONSIVO --- */
+#true-ending-skip-btn:hover {
+    border-color: #5a4040;
+    color: #b09090;
+    background: rgba(30, 10, 10, 0.8);
+}
+
+/* ============================================================
+   BOTÃO MENU (canto superior esquerdo)
+   ============================================================ */
+.menu-btn {
+    font-family: 'Special Elite', cursive;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: #5a4a3a;
+    background: transparent;
+    border: 1px solid #2a1a1a;
+    border-radius: 3px;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.menu-btn:hover {
+    color: #a08060;
+    border-color: #5a3a2a;
+    background: rgba(40, 10, 5, 0.4);
+    box-shadow: 0 0 6px rgba(100, 40, 10, 0.3);
+}
+
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
 @media (max-width: 600px) {
     #game-board {
         padding: 0 6px;
@@ -388,9 +694,7 @@ body {
         aspect-ratio: 7 / 10;
     }
 
-    .game-title {
-        font-size: 2rem;
-    }
+    .game-title { font-size: 2rem; }
 
     .letter {
         font-size: 1.1rem;
@@ -398,7 +702,10 @@ body {
         padding: 1.5rem;
     }
 
-    .stats {
-        gap: 0.75rem;
+    .stats { gap: 0.75rem; }
+
+    .atmospheric-msg {
+        font-size: 1rem;
+        bottom: 16px;
     }
 }

@@ -19,9 +19,11 @@
 <body class="relative">
     <div id="fog-overlay"></div>
 
+    <!-- Mensagem atmosférica -->
+    <div id="atmospheric-msg" class="atmospheric-msg hidden"></div>
+
     <div id="start-menu" class="fixed inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center z-50">
-        <h1 class="text-5xl font-bold text-red-700 mb-4" style="text-shadow: 2px 2px 8px rgba(128, 1, 1, 0.7);">SILENT
-            HILL</h1>
+        <h1 class="text-5xl font-bold text-red-700 mb-4" style="text-shadow: 2px 2px 8px rgba(128, 1, 1, 0.7);">SILENT HILL</h1>
         <h2 class="text-2xl text-gray-400 italic mb-10">Fragmented Memories</h2>
         <div class="flex flex-col gap-4 w-64">
             <button data-difficulty="easy"
@@ -30,19 +32,23 @@
                 class="difficulty-btn bg-gray-700 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">Medium</button>
             <button data-difficulty="hard"
                 class="difficulty-btn bg-gray-700 hover:bg-red-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">Hard</button>
+            <button data-difficulty="nightmare"
+                class="difficulty-btn nightmare-btn text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">Nightmare</button>
         </div>
     </div>
 
     <div id="game-container" class="container mx-auto px-4 py-8 min-h-screen flex-col hidden">
-        <header class="text-center mb-8">
+        <header class="relative text-center mb-8">
+            <button id="menu-btn" class="menu-btn absolute left-0 top-1/2 -translate-y-1/2">
+                <i class="fas fa-door-open mr-2"></i>Menu
+            </button>
             <h1 id="nav-title"
                 class="game-title text-3xl md:text-5xl font-bold text-red-700 tracking-wider cursor-pointer hover:text-red-500 transition-all duration-300"
                 style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">SILENT HILL</h1>
             <p class="text-xl text-gray-400 italic">Piece together the shattered remnants of your past...</p>
         </header>
 
-        <div
-            class="stats flex flex-wrap justify-between items-center mb-6 bg-black bg-opacity-40 p-4 rounded-lg border border-gray-800 shadow-lg gap-4">
+        <div class="stats flex flex-wrap justify-between items-center mb-6 bg-black bg-opacity-40 p-4 rounded-lg border border-gray-800 shadow-lg gap-4">
             <div class="flex items-center gap-4">
                 <div>
                     <p class="text-sm text-gray-400">STEPS</p>
@@ -51,6 +57,10 @@
                 <div>
                     <p class="text-sm text-gray-400">TIME</p>
                     <p class="text-2xl font-mono text-red-500"><span id="time-counter">00:00</span></p>
+                </div>
+                <div id="nightmare-badge" class="hidden">
+                    <p class="text-sm text-gray-400">MODE</p>
+                    <p class="text-sm font-mono nightmare-mode-text">☠ NIGHTMARE</p>
                 </div>
             </div>
 
@@ -67,26 +77,27 @@
             </button>
         </div>
 
-        <div id="game-board" class="grid gap-4 mx-auto w-full max-w-5xl flex-grow">
-        </div>
+        <!-- Notificação de power-up ativo (Nightmare) -->
+        <div id="powerup-notification" class="powerup-notification hidden"></div>
+
+        <div id="game-board" class="grid gap-4 mx-auto w-full max-w-5xl flex-grow"></div>
 
         <div class="mt-8 text-center text-gray-500 italic">
             <p>Listen to your <span id="radio-trigger" class="radio-link">radio</span>... it warns you of danger...</p>
         </div>
     </div>
 
-    <!-- tela vitoria -->
+    <!-- tela vitoria (carta da Mary) -->
     <div id="victory-screen"
         class="fixed inset-0 bg-black bg-opacity-100 flex-col justify-center items-center z-50 hidden">
         <div class="letter text-left p-8 md:p-12 rounded-md max-w-2xl w-11/12">
             <h2 class="text-3xl font-bold mb-6">My Dearest James,</h2>
-            <p class="mb-4">In my restless dreams, I see that town. Silent Hill. You promised you'd take me there again
-                someday, but you never did.</p>
+            <p class="mb-4">In my restless dreams, I see that town. Silent Hill. You promised you'd take me there again someday, but you never did.</p>
             <p class="mb-4">Well, I'm alone there now... In our 'special place'... Waiting for you...</p>
-            <p class="mb-4">I'm glad you came. Now I understand... The real reason I needed you to come to this town.
-            </p>
+            <p class="mb-4">I'm glad you came. Now I understand... The real reason I needed you to come to this town.</p>
             <p class="mb-6">It's time to end this.</p>
             <p class="italic">Mary</p>
+            <div id="ending-label" class="ending-label hidden"></div>
             <button id="play-again-btn"
                 class="mt-8 bg-red-900 hover:bg-red-800 text-white w-full px-6 py-3 rounded-lg transition-colors text-lg">
                 <i class="fas fa-play mr-2"></i>Remember Again
@@ -99,29 +110,54 @@
         class="fixed inset-0 bg-black bg-opacity-85 z-50 flex flex-col justify-center items-center hidden">
         <video loop playsinline id="video-game-over">
             <source src="audio/gameovertela.mp4" type="video/mp4">
-            Seu navegador não suporta a tag de vídeo.
         </video>
-
         <div class="relative z-10 w-full h-full flex flex-col justify-center items-center">
-            <div class="flex-grow"></div> <button id="game-over-close-btn"
+            <div class="flex-grow"></div>
+            <button id="game-over-close-btn"
                 class="mb-8 bg-gray-800 bg-opacity-70 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
                 <i class="fas fa-times mr-2"></i>Close
             </button>
         </div>
-
     </div>
 
-    <!-- tela easter egg -->
+    <!-- tela easter egg cachorro -->
     <div id="dog-ending-screen" class="fixed inset-0 bg-black justify-center items-center z-50 hidden">
         <video loop playsinline id="dog-video-bg">
             <source src="audio/doguinho.mp4" type="video/mp4">
-            Seu navegador não suporta vídeos.
         </video>
-
         <div class="relative z-10 w-full h-full flex flex-col justify-center items-center">
-            <div class="flex-grow"></div> <button id="dog-ending-close-btn"
+            <div class="flex-grow"></div>
+            <button id="dog-ending-close-btn"
+                class="mb-8 bg-gray-800 bg-opacity-70 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+                <i class="fas fa-forward mr-2"></i>Skip
+            </button>
+        </div>
+    </div>
+
+    <!-- tela easter egg OVNI -->
+    <div id="ufo-ending-screen" class="fixed inset-0 bg-black justify-center items-center z-50 hidden">
+        <video loop playsinline id="ufo-video-bg">
+            <source src="audio/ufo_ending.mp4" type="video/mp4">
+        </video>
+        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center">
+            <div class="flex-grow"></div>
+            <p class="ufo-text mb-6">They came for him. Not for her.</p>
+            <button id="ufo-ending-close-btn"
                 class="mb-8 bg-gray-800 bg-opacity-70 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
                 <i class="fas fa-times mr-2"></i>Close
+            </button>
+        </div>
+    </div>
+
+    <!-- tela endings verdadeiros (In Water / Leave / Maria) — video com skip, depois carta de Mary -->
+    <div id="true-ending-screen" class="fixed inset-0 bg-black z-50 hidden flex-col justify-center items-center">
+        <video playsinline id="true-ending-video" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);min-width:100%;min-height:100%;object-fit:cover;z-index:0;">
+            <source id="true-ending-source" src="" type="video/mp4">
+        </video>
+        <div class="relative z-10 w-full h-full flex flex-col justify-end items-center pb-8">
+            <button id="true-ending-skip-btn"
+                class="bg-gray-800 bg-opacity-70 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+                <i class="fas fa-forward mr-2"></i>Skip
             </button>
         </div>
     </div>
@@ -130,7 +166,6 @@
     <audio id="static-sound" loop src="audio/static.mp3"></audio>
     <audio id="siren-sound" src="audio/sirene.mp3"></audio>
     <audio id="monster-sound" src="audio/squeal.mp3"></audio>
-    <!-- <audio id="match-sound" src=""></audio> -->
     <audio id="flip-sound" src="audio/pown.mp3"></audio>
     <audio id="victory-sound" src="audio/receber_item.mp3"></audio>
 
