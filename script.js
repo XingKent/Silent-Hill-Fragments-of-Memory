@@ -48,21 +48,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // DADOS DAS CARTAS
   // ============================================================
   const ALL_CARDS = [
-    { name: "James",           img: "img/james.jpg",        type: "human",   powerup: "heal"    },
+    //Mary Angela Laura Crane BTW
     { name: "Mary",            img: "img/mary.jpg",         type: "human",   powerup: null      },
+    { name: "Mannequin",       img: "img/mannequin.jpg",    type: "monster", powerup: null      },
     { name: "Nurse",           img: "img/nurse.jpg",        type: "monster", powerup: null      },
     { name: "Lying Figure",    img: "img/lyingf1.png",      type: "monster", powerup: null      },
+    { name: "Maria Boss",      img: "img/maria_boss.jpg",   type: "boss",    powerup: null      },
+    { name: "Abstract Daddy",  img: "img/abstdad.jpg",      type: "boss",    powerup: null      },
+    { name: "James",           img: "img/james.jpg",        type: "human",   powerup: "heal"    },
+    { name: "Laura",           img: "img/laura.jpg",        type: "other",   powerup: "forget"  },
+    { name: "Angela",          img: "img/angela.jpg",       type: "human",   powerup: "vanish"  },
+    { name: "Eddie",           img: "img/eddie.jpg",        type: "human",   powerup: "rage"    },
+    { name: "Maria",           img: "img/maria.jpg",        type: "human",   powerup: "shuffle" },
+    { name: "Robbie",          img: "img/robbie.jpg",       type: "other",   powerup: "chaos"   },
+    { name: "Pyramid Head",    img: "img/pyramid_head.jpg", type: "boss",    powerup: "execute" },
     { name: "Radio",           img: "img/radio.webp",       type: "item",    powerup: "freeze"  },
     { name: "Flashlight",      img: "img/flashlight.webp",  type: "item",    powerup: "reveal"  },
-    { name: "Robbie",          img: "img/robbie.jpg",       type: "other",   powerup: "chaos"   },
-    { name: "Abstract Daddy",  img: "img/abstdad.jpg",      type: "boss",    powerup: null      },
-    { name: "Pyramid Head",    img: "img/pyramid_head.jpg", type: "boss",    powerup: "execute" },
-    { name: "Maria",           img: "img/maria.jpg",        type: "human",   powerup: "shuffle" },
-    { name: "Eddie",           img: "img/eddie.jpg",        type: "human",   powerup: "rage"    },
-    { name: "Angela",          img: "img/angela.jpg",       type: "human",   powerup: "vanish"  },
-    { name: "Laura",           img: "img/laura.jpg",        type: "other",   powerup: "forget"  },
-    { name: "Mannequin",       img: "img/mannequin.jpg",    type: "monster", powerup: null      },
-    { name: "Maria Boss",      img: "img/maria_boss.jpg",   type: "boss",    powerup: null      },
   ];
 
   // ============================================================
@@ -74,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     easy:      { pairs: 6,  sanityLoss: 5,  gridClasses: "grid-cols-3 sm:grid-cols-4" },
     medium:    { pairs: 8,  sanityLoss: 10, gridClasses: "grid-cols-4" },
     hard:      { pairs: 10, sanityLoss: 15, gridClasses: "grid-cols-4 md:grid-cols-5" },
-    nightmare: { pairs: 15, sanityLoss: 20, gridClasses: "grid-cols-5" },
+    nightmare: { pairs: 15, sanityLoss: 15, gridClasses: "grid-cols-5" },
   };
 
   // ============================================================
